@@ -1,0 +1,109 @@
+---
+title: "Week9_Project_Align_Count"
+author: "Ifeh Akano"
+date: "3/21/2021"
+output: html_document
+---
+
+# 1. Set up a github repository where you will store all your scripts, and ideally, even your report at one point.
+
+# 2. Align all your samples. Ideally use a for-loop and/or a script, i.e. automate and standardize the task to a certain extent, but do remember that legibility is valuable, too.
+
+## Alignment
+
+### I used the following bash script 
+
+```{align.sh}
+#! /bin/bash -l
+#SBATCH --partition=angsd_class
+#SBATCH --nodes=2
+#SBATCH --ntasks=8
+#SBATCH --job-name=STARalign
+#SBATCH --time=12:00:00
+#SBATCH --mem=48G
+spack load star@2.7.0e
+for sample in KO_2D10_1 KO_2D10_2 KO_2D10_3 KO_2D9_1 KO_2D9_2 KO_2D9_3 WT_2C11_1 WT_2C11_2 WT_2C11_3; do
+  STAR -- runMode alignReads \
+       -- outFilterMultimapNmax 3 \
+       -- runThreadN 8 \
+       -- genomeDir human_STARindex \
+       -- readFilesIn RNAseq_IA_fastq/HEK293T_SHPRH_${sample}_R1_001.fastq.gz RNAseq_IA_fastq/HEK293T_SHPRH_${sample}_R2_001.fastq.gz \
+       -- readFilesCommand zcat \
+       -- outFileNamePrefix aligned/HEK293T_SHPRH_${sample}_aligned. \
+       -- outSAMtype BAM SortedByCoordinate
+done
+```
+
+### Each of my sample were ran in triplicate, and each triplicate was ran across too lanes (files distinguished by R1 and R2 of the same replicate). The syntax used in the script above combines the alignment for the R1 and R2 samples for each replcate.
+
+## Output 
+
+### The following files were created for each sample.
+
+```
+HEK293T_SHPRH_KO_2D10_1_aligned.Aligned.sortedByCoord.out.bam
+HEK293T_SHPRH_KO_2D10_1_aligned.Log.final.out
+HEK293T_SHPRH_KO_2D10_1_aligned.Log.out
+HEK293T_SHPRH_KO_2D10_1_aligned.Log.progress.out
+HEK293T_SHPRH_KO_2D10_1_aligned.SJ.out.tab
+HEK293T_SHPRH_KO_2D10_1_aligned._STARtmp
+```
+
+# 3. Generate a read count table.
+
+## Used featurecounts to count the reads for all 10 bam files
+
+```
+featureCounts -T 4 -p -a human.gtf  -g gene_id -o featCounts_SHPRH.txt /aligned/*.bam
+```
+
+### Txt file was generated
+
+# 4. Load the read count table into R and perform the quality controls and processing steps that we discussed in class.
+
+## Install necessary packages
+
+```{r}
+library(tidyverse)
+library(ggplot2) 
+library(magrittr) 
+library(DESeq2)
+library(pheatmap)
+```
+
+## Set the path to the directory containing the data
+
+```{r}
+folder <- "~/Documents/ANGSD/count_table/" # Summary files from featurecounts run
+readcounts <- paste0(folder, "featcounts_SHPRH.txt.summary") %>%
+  read.table(., header=TRUE)
+str(readcounts)
+```
+
+## Convert sample names to more useful identifiers
+
+```{r}
+orig_names <- names(readcounts) 
+names(readcounts) <- gsub(".*(WT_2C11|KO_2D9|KO_2D10)(_[0-9]+).*", "\\1\\2\\3", orig_names)
+str(readcounts)
+```
+
+## Data transformation and altering the sample names
+
+```{r}
+readcounts <- pivot_longer(readcounts, -1, names_to = "Sample", values_to = "Counts") %>%
+  mutate(Sample=str_replace(Sample,"2D10","2")) %>%
+  mutate(Sample=str_replace(Sample,"2D9","1")) %>%
+  mutate(Sample=str_remove(Sample,"2C11_"))
+```
+
+## Bar plot 
+
+```{r}
+readcounts %>%
+  filter(Status %in% c("Assigned", "Unassigned_NoFeatures", "Unassigned_Ambiguity")) %>% 
+  ggplot(mapping = aes(x = Sample, y = Counts, fill = Status)) +
+    geom_bar(stat = "identity") +
+    scale_fill_brewer(palette = "PRGn") +
+    ggtitle("featureCounts Summary from SHPRH KO Dataset")
+```
