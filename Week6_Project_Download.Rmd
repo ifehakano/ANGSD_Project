@@ -1,0 +1,71 @@
+---
+title: "Week6_Project_Download_IA"
+author: "Ifeh Akano"
+date: "February 19th, 2021"
+output: html_document
+---
+
+# 1. Download FASTQ files. Document: 
+## where did you get it from?
+## what publication is it linked to?
+## who generated the data?
+## how was the NA extracted?
+## what library prep was used?
+## what cell type was used?
+## what was the treatment/experimental condition?
+## what sequencing platform was used?
+
+### My FASTQ files are from the Integrated Genomics Operations (IGO) core at MSK. I generated these data in the laboratory of Dr. Yael David at MSK. These are HEK293T cells, wildtpye (WT) expressing endogenous SHPRH and SHPRH KO cells in which I used CRISPR/Cas9 technologies  to develop a stable SHPRH knockout cell line. I submitted the cells as flash-frozen pellets harvested in PBS in triplicate (9 samples). IGO extracted the RNA, performed QC, and library prep using IDT Dual Index adapters. Libraries were sequences on an Illumina HiSeq 4000 with 50 bp paired-end reads and 30-40 million reads per sample.  
+###I first had to log into the IGO MSK server and load the files into my scratch folder. In order to do this, I first logged into the server through the terminal. 
+
+```
+cd /Volumes/Davidshy/Project_11231_B
+```
+
+```
+rsync -ar --progress Project_11231_B ifa4001@aphrodite.med.cornell.edu:/athena/angsd/scratch/ifa4001/
+```
+
+# Align the FASTQ file with an appropriate aligner (you may have to build a new index). Document: (3pt)
+
+### To create the genome index,I downloaded the human genome and annotation in /20210216/human_STARindex. 
+
+```
+wget -O human.fa.gz "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_37/gencode.v37.annotation.gtf.gz"
+```
+
+```
+wget -O human.gtf.gz "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_37/gencode.v37.transcripts.fa.gz"
+```
+
+```
+gunzip human.fa.gz
+gunzip human.gtf.gz
+```
+```
+chmod +rwx human.fa
+chmod +rwx human.gtf
+```
+
+### Then I generated the STAR index
+
+```
+#! /bin/bash
+STAR -- runMode genomeGenerate \
+-- runThreadN 1 \
+-- genomeDir human_STARindex \
+-- genomeFastaFiles human.fa \
+-- sjdbGTFfile human.gtf \
+-- sjdbOverhang 49
+```
+
+## According to the STAR2.7.0 manual, the following parameters must be considered:
+### --runThreadN NumberOfThreads (this defines the number of threads to be used for genome generation, it has to be set to the number of available cores on the server node, so this should be one )
+### --runMode genomeGenerate (standard for genome index generation)
+### --genomeDir /path/to/genomeDir (need 100 GB of space for typical mammalian genome)
+### --genomeFastaFiles /path/to/genome/fasta1 /path/to/genome/fasta2 ...
+### --sjdbGTFfile /path/to/annotations.gtf
+### --sjdbOverhang ReadLength-1 (the read length for my experiment was 50 bp, so the sjdbOverhang should be 49)
+
+## summary of outcome and basic QC
+
