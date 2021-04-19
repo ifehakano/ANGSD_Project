@@ -1,0 +1,443 @@
+---
+title: "Final_Project"
+author: "Ifeh Akano"
+date: "4/19/2021"
+output: html_document
+---
+
+---
+title: "Akano_Project_SHPRHKO"
+author: "Ifeh Akano"
+date: "4/19/2021"
+output: html_document:
+  toc: True
+---
+
+# Introduction
+
+## Chromatin can adopt active or repressive states to tightly regulate transcription
+
+### The basic unit of eukaryotic chromatin consists of genomic DNA tightly wound around octamers of the core histones – H2A, H2B, H3, and H4 – to form nucleosome core particles (NCPs).(Allis and Jenuqein 2001) Alterations in chromatin accessibility play a crucial role in all DNA-templated processes, and the dynamic nature of chromatin structure is tightly controlled by epigenetic ‘marks’, such as DNA methylation and histone post-translational modifications (PTMs). Histone ubiquitination is distinct from other histone PTMs, such as acetylation and methylation, because it involves the covalent conjugation of a 76-amino acid ubiquitin protein onto a lysine residue via a three-part cascade consisting of: E1 activating, E2 conjugating, and E3 ligase enzymes. Since its discovery, it has become increasingly apparent that histone ubiquitination plays essential roles in DNA repair, nucleosome dynamics, and participation in ‘crosstalk’ with other PTMs.(Workman and Weake 2008) Notably, recent proteomics studies have identified an extensive number of novel ubiquitination sites on all four of the core histones, as well as the linker histone H1.(Huang et al. 2014) The vast majority of histone ubiquitination sites, however, remain uncharacterized. The evident importance of histone ubiquitination in the maintenance of genomic integrity provides rationale for studying novel histone E3 ligases.
+
+```{r}
+knitr::include_graphics("/Users/ifehakano/Documents/ANGSD/SHPRH.png")
+```
+
+## The unique domain architecture of the E3 ligase SHPRH suggests roles in chromatin modulation, but SHPRH is largely unstudied
+
+### The multi-domain E3 ligase SHPRH (SNF2-histone linker-PHD-RING-helicase) has a well-characterized role in mediating an error-free branch of post-replication repair.(Unk et al. 2010) SHPRH is one of two mammalian homologues of yeast Rad5, the other being SMARCA3, all known to promote the regression and restart of stalled DNA replication forks through ubiquitination of the proliferating-cell nuclear antigen (PCNA) sliding clamp.(Unk et al. 2010) Literature shows that loss of SHPRH or SMARCA3 increases genomic instability following DNA damage.12 SMARCA3 and SHPRH have been shown to act in UV or methyl methane sulfonate (MMS) damage-specific manners, respectively, the latter promoting the recruitment of damage-specific polymerases.(Lin et al. 2012) These mechanisms are mediated by the SNF2 and RING domains of SHPRH and SMARCA3, conserved features between all three homologues (Figure 1). In stark contrast to its homologues, SHPRH has evolved to also harbor a histone-binding PHD and an uncharacterized H15 domain, which shows homology to the globular domain of the linker histone H1.(Unk et al. 2010) This unique domain architecture led Brühl et al. to investigate the biochemical activity of SHPRH in the presence of nucleosomal substrates. Indeed, they demonstrate robust ubiquitination of histones H3 and H4 in vitro by SHPRH with novel E2 pairs.(Bruhl et al. 2019) Moreover, recent literature suggests that SHPRH interacts with histone H3 by its PHD to regulate the transcription of ribosomal RNA (rRNA) in the nucleoli.(Lee et al. 2017) While these findings were encouraging, a detailed understanding of the activity of SHPRH on chromatin and its downstream implications remain unknown. I hypothesize that SHPRH regulates gene expression through epigenetic alterations in chromatin accessibility, and that its roles in transcriptional regulation are not limited to ribosomal biogenesis.
+
+# Results
+
+### These data were previously analyzed by Dr. Richard Koche at MSKCC
+
+### This experiment will test the hypothesis that SHPRH has novel roles in maintaining chromatin accessibility and proper gene expression. This hypothesis is based on the histone ubiquitination activity of SHPRH and its role in rRNA transcription through direct chromatin binding and recruitment of Pol I.(Lee et al. 2017) To test this, I performed bulk RNA-seq and ATAC-seq, respectively, in collaboration with the Integrated Genomics Operations (IGO) core at MSKCC using WT and SHPRH KO cells. Bulk RNA-seq led to the identification of significant differences between the groups, with over 1,000 genes displaying expression alterations (Figure 2a). This transcriptional rewiring indicates a crucial role for SHPRH in regulating gene expression in HEK293T cells. By ATAC-seq, I observed a significant decrease in accessibility of wide genomic regions upon cellular depletion of SHPRH (Figure 2b). Overlaying these data, we demonstrate a substantial number of overlapping genes, suggesting that SHPRH may regulate the gene expression of these genes through alterations in chromatin accessibility (Figure 2c). Altogether, these data highlight the intricate complexities by which SHPRH regulates chromatin biology in cells and allow for the identification of future targets of inquiry for the role of SHPRH in cancer.
+
+### These data were kindly analyzed by Dr. Richard Koche at MSKCC. The data from this analysis suggests a global transcriptional rewiring and opening of chromatin upon cellular depletion of SHPRH. Moving forward, I plan to observe the role of SHPRH in regulating chromatin biology in a more relevant model of human disease, such as cancer cell lines or organoids. Furthermore, a big limitation of  this experiment is that I performed bulk-RNA- and ATAC-seq, which comes with many caveats. It would be interesting to perform single-cell RNA-seq and compare the results to the general trend observed here. A potential bias in this experiment is the limitation in replicates. It is favorable to have at least six replicates, and I only have three. This could lead to potential biases when interpreting the data, and I may consider redoing the experiment. It's also interesting to note the vast differences between the two knockout cell lines, which could be attributed to the different mutations produced by the CRISPR technology, either homozygous or heterozygous. Another limitation of this experiment, is that I cannot ignore the role that SHPRH plays in DNA repair, and this experiment does not separate the role of SHPRH on chromatin from its mechanism in DNA repair. It is likely that cellular depletion of SHPRH significantly alters the genomic integrity of the 293T cells, leading to a disrupted transcriptional profile. Proper controls are needed to elucidate the dependency, or lackthereof, of these distinct SHPRH functions. 
+
+```{r}
+knitr::include_graphics("/Users/ifehakano/Documents/ANGSD/Figure2_ANGSD.png")
+```
+
+## QC
+
+### These data are very high quality and statistically significant analysis. FastQC analysis confirmed no need for trimming, with less than 0.1% adapter content and no significantly overrepresented sequences. The FastQC sequence counts show a large number of duplicate reads, resulting in approximately 20M unique reads per sample. The per sequence GC content is relatively consistent across all samples at about 50% GC content. The STAR alignment scores show 90% of reads uniquely mapped for all samples, and feature counting show approximately 76% of assigned features. In conclusion, these data exhibit exceptional QC analysis and readiness to proceed to DESeq analysis. 
+
+## Cellular depletion of SHPRH leads to a global transcriptional rewiring in HEK 293T cells 
+
+### These data suggest that SHPRH plays a crucial role in the regulation of proper gene expression. This could be attributed to its histone ubiquitination activity, ribosomal RNA transcription activity, chromatin remodeling activity, and/or DNA repair activity. Furthermore, I predict that SHPRH could have alternative functions in the cell, given these drastic genomic changes upon cellular depletion. Interestingly, I did not observe a substantial number of ribosomal proteins in the RNA-seq hits. This suggests that the role of SHPRH in regulating rRNA transcription is only a small fraction of its functions in the cell.
+
+# Methods
+
+## Sample preparation, data acquisition, and sequencing
+
+### For the purpose of this experiment, I used three monoclonal cell lines: 1) WT 293T cells (expressing endogenous SHPRH) and 2) and 3) two monoclonal SHPRH KO 293T cell lines. The presence or absence of SHPRH for each cell line was validated by both genomic sequencing and western blot analyses (data not shown). From sequencing analysis, we observed that SHPRH KO 2D9 contains a homozygous knockout for SHPRH, and SHPRH KO 2D10 exhibits a heterozygous knockout for SHPRH. All cells were harvested at the same time and at the same passage number. Samples were prepared in triplicate (three  replicates/cell line = 9 samples). For this experiment, I acquired raw reads from the Integrated Genomics Operations Core (IGO) at MSK. IGO performed the RNA extractions, QC, and library prep using IDT Dual Index adapters. Libraries were sequenced on an Illumina HiSeq 4000 with 50 bp paired-end reads and 30-40 million reads per sample.
+
+### Downloading samples 
+
+```{bash, eval=FALSE, echo=TRUE}
+# I first had to log into the IGO MSK server and load the files into my scratch folder.
+cd /Volumes/Davidshy/Project_11231_B
+rsync -ar --progress Project_11231_B ifa4001@aphrodite.med.cornell.edu:/athena/angsd/scratch/ifa4001/
+```
+
+## Alignment and QC
+
+### Before aligning the raw reads to the genome, I first performed fastqc and determined no significant overrepresented sequences or adapter content and therefore no need for trimming.
+
+```{r}
+knitr::include_graphics(c("/Users/ifehakano/Desktop/Screen Shot 2021-02-26 at 9.30.27 PM.png","/Users/ifehakano/Desktop/Screen Shot 2021-02-26 at 9.31.32 PM.png", "/Users/ifehakano/Desktop/Screen Shot 2021-02-26 at 9.35.05 PM.png"))
+```
+
+### In parallel, I indexed the human genome and aligned all nine files using STAR. This led to BAM files for each samples representative of that specific alignment. I used STAR to index the human genome and perform the alignment, which takes splice variants into account.
+
+```{bash, eval=FALSE, echo=TRUE}
+# downloading human genome and annotation
+wget -O human.fa.gz "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_37/gencode.v37.annotation.gtf.gz"
+wget -O human.gtf.gz "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_37/gencode.v37.transcripts.fa.gz"
+
+## generate STAR index
+#! /bin/bash -l
+#SBATCH --partition=angsd_class
+#SBATCH --nodes=2
+#SBATCH --ntasks=4
+#SBATCH --job-name=human_indexing
+#SBATCH --time=12:00:00
+#SBATCH --mem=50G
+spack load star@2.7.0e
+STAR --runMode genomeGenerate \ 
+     --runThreadN 4 \
+     --genomeDir /scratchLocal/ifa4001/human_STARindex/ \
+     --genomeFastaFiles /scratchLocal/ifa4001/human.fa \
+     --sjdbGTFfile /scratchLocal/ifa4001/human.gtf \
+     --sjdbOverhang 49
+exit
+
+### According to the STAR2.7.0 manual, the following parameters must be considered:
+#### --runThreadN NumberOfThreads (this defines the number of threads to be used for genome generation, it has to be set to the number of available cores on the server node, so this should be one )
+#### --runMode genomeGenerate (standard for genome index generation)
+#### --genomeDir /path/to/genomeDir (human genome directory)
+#### --genomeFastaFiles /path/to/genome/fasta (unzipped fasta file)
+#### --sjdbGTFfile /path/to/annotations.gtf (unzipped annotation file)
+#### --sjdbOverhang ReadLength-1 (the read length for my experiment was 50 bp, so the sjdbOverhang should be 49)
+
+# Output: The following files were produced in /human_STARindex/
+
+# chrLength.txt
+# chrStart.txt
+# geneInfo.tab
+# SA
+# sjdbList.fromGTF.out.tab
+# chrNameLength.txt
+# exonGeTrInfo.tab
+# Genome
+# SAindex
+# sjdbList.out.tab
+# chrName.txt
+# exonInfo.tab
+# genomeParameters.txt
+# sjdbInfo.txt
+# transcriptInfo.tab
+
+## Alignment
+
+#! /bin/bash -l
+#SBATCH --partition=angsd_class
+#SBATCH --nodes=2
+#SBATCH --ntasks=4
+#SBATCH --job-name=STARalign
+#SBATCH --time=12:00:00
+#SBATCH --mem=60G
+spack load star@2.7.0e
+for sample in KO_2D10_1 KO_2D10_2 KO_2D10_3 KO_2D9_1 KO_2D9_2 KO_2D9_3 WT_2C11_1 WT_2C11_2 WT_2C11_3; do
+  STAR -- runMode alignReads \
+       -- outFilterMultimapNmax 3 \
+       -- runThreadN 4 \
+       -- genomeDir human_STARindex \
+       -- readFilesIn RNAseq_IA_fastq/HEK293T_SHPRH_${sample}_R1_001.fastq.gz RNAseq_IA_fastq/HEK293T_SHPRH_${sample}_R2_001.fastq.gz \
+       -- readFilesCommand zcat \
+       -- outFileNamePrefix aligned/HEK293T_SHPRH_${sample}_aligned. \
+       -- outSAMtype BAM SortedByCoordinate
+done
+```
+
+### Following alignment, I ran multiqc on the alignment and the fastqc. 
+
+```{bash, eval=FALSE, echo=TRUE}
+spack load -r py-multiqc
+multiqc aligned
+```
+
+```{r}
+knitr::include_graphics("/Users/ifehakano/Documents/ANGSD/star_alignment_plot.png")
+```
+
+## featureCounts 
+
+### In summary, the alignment QC suggests that these data are acceptable to move forward with the analysis. I used featureCounts to count the reads from the 'aligned' directory. The -T flag represents the number of threads used to count features, the -p flag specifies the minimum number of consensus subreads both reads from the same pair must have, which is 1 by default.
+
+```{bash, eval=FALSE, echo=TRUE}
+spack load subread
+featureCounts -T 4 -p -a human.gtf -g gene_id -o featCounts_SHPRH.txt /aligned/*.bam
+```
+
+### This script produced a txt file of the counted features for each sample, which I ran MultiQC on. This MultiQC of featureCounts shows approximately 76% assigned features for each sample, indicative that we can move forward with the analysis.
+
+```{r}
+knitr::include_graphics("/Users/ifehakano/Documents/ANGSD/featureCounts_assignment_plot.png")
+```
+
+## Load featureCounts into R for downstream data analysis
+
+### I next read the featureCounts txt summary into R for downstream data analysis. 
+
+```{r}
+# Install necessary packages
+library(tidyverse)
+library(ggplot2) 
+library(magrittr) 
+library(DESeq2)
+library(pheatmap)
+
+# Set the path to the directory containing the data
+
+folder <- "~/Documents/ANGSD/count_table/" # Summary files from featurecounts run
+readcounts <- paste0(folder, "featcounts_SHPRH.txt.summary") %>%
+  read.table(., header=TRUE)
+str(readcounts)
+
+## Convert sample names to more useful identifiers
+
+orig_names <- names(readcounts) 
+names(readcounts) <- gsub(".*(WT_2C11|KO_2D9|KO_2D10)(_[0-9]+).*", "\\1\\2\\3", orig_names)
+str(readcounts)
+
+# Data transformation and further altering of sample names
+
+readcounts <- pivot_longer(readcounts, -1, names_to = "Sample", values_to = "Counts") %>%
+  mutate(Sample=str_replace(Sample,"2D10","2")) %>%
+  mutate(Sample=str_replace(Sample,"2D9","1")) %>%
+  mutate(Sample=str_remove(Sample,"2C11_"))
+
+# Bar plot of featureCounts
+
+readcounts %>%
+  filter(Status %in% c("Assigned", "Unassigned_NoFeatures", "Unassigned_Ambiguity")) %>% 
+  ggplot(mapping = aes(x = Sample, y = Counts, fill = Status)) +
+    geom_bar(stat = "identity") +
+    scale_fill_brewer(palette = "PRGn") +
+    ggtitle("featureCounts Summary from SHPRH KO Dataset")
+```
+
+## Build DESeq data set
+
+### The next step of the RNA-seq workflow is to generate a DESeq object with the count martix. In order to do this, I must generate a countData matrix, which is the count matrix from featureCounts, and a columnData matrix, which represents the grouping metadata (e.g. gene IDs, sample conditions). Importantly, the data must be transformed, for which I will use rlog, and the row names must be set as sample names.
+
+```{r}
+# Set the path to the directory containing the count matrix
+folder <- "~/Documents/ANGSD/count_table/" # Summary files from featurecounts run
+readcounts <- paste0(folder, "featcounts_SHPRH.txt") %>%
+  read.table(., header=TRUE)
+
+# Convert sample names to more useful identifiers
+orig_names <- names(readcounts) 
+names(readcounts) <- gsub(".*(WT_2C11|SHPRH_KO_2D9|SHPRH_KO_2D10)(_[0-9]+).*", "\\1\\2\\3", orig_names)
+str(readcounts)
+```
+
+### Generate the DESeqDataSet
+
+#### I will use DESeq2 to normalize the samples for differences in their sequencing depth and explore the data.
+
+```{r}
+## gene IDs should be stored as row.names
+row.names(readcounts) <- make.names(readcounts$Geneid)
+## exclude the columns without read counts (columns 1 to 6 contain additional ## info such as genomic coordinates)
+readcounts <- readcounts[ , -c(1:6)]
+sample_info <- DataFrame(condition = gsub("_[0-9]+", "", names(readcounts)), row.names = names(readcounts) )
+sample_info
+dds <- DESeqDataSetFromMatrix(countData = readcounts, 
+                                   colData = sample_info,
+                                   design = ~ condition)
+dds <- DESeq(dds)
+dds
+```
+
+## rlog normalization 
+
+```{r}
+rld <- rlog(dds, blind = TRUE)
+
+## visually checking the results of the rlog function
+par(mfrow=c(1,2))
+
+## the rlog-transformed counts are stored in the accessor "assay"
+plot(assay(rld)[,1],
+     assay(rld)[,2],
+     cex=.1, main = "rlog transformed",
+     xlab = colnames(assay(rld[,1])),
+     ylab = colnames(assay(rld[,2])) )
+
+rlog.norm.counts <- assay(rld)
+
+plot(rlog.norm.counts[,1:2], cex=.1,
+     main = "size factor and log2-transformed")
+
+## What does the mean-sd-plot show?
+
+msd_plot <- vsn::meanSdPlot( rlog.norm.counts, ranks=FALSE, plot = FALSE)
+msd_plot$gg + ggtitle("rlog transformation") + coord_cartesian(ylim = c(0,3))
+```
+
+```{r}
+## Save objects on a disk to be loaded into future sessions
+save.image(file = "RNAseqSHPRHKO.RData")
+```
+
+## Exploratory analyses
+
+### I next performed exploratory analyses with the DESeq object and the rlog normalized matrix. This will provide insight into the clustering of the samples. 
+
+```{r}
+# Load data 
+load("RNAseqSHPRHKO.RData")
+ls()
+```
+
+## Correlation coefficient clustering 
+
+### Correlation coefficients are used to observe the hierarchical clustering of the samples.
+
+```{r}
+corr_coeff <- cor(rlog.norm.counts, method = "pearson") # x is the rlog transformed counts, and method specifies the correlation coefficient
+as.dist(1-corr_coeff, upper = TRUE) %>%
+as.matrix %>% 
+pheatmap::pheatmap(., main = "Pearson correlation") # the as.dist function computes the distance in the correlation coefficients on the rlog transformed counts, piping this into the as.matrix function returns the distance matrix computed, and this is piped into the pheatmap function that draws a clustered heatmap
+```
+
+```{r}
+# Comparing the effects of rlog 
+par(mfrow=c(1,2)) 
+# Pearson corr. for rlog.norm values
+as.dist(1 - corr_coeff) %>% hclust %>%
+plot( ., labels = colnames(rlog.norm.counts),
+main = "rlog transformed read counts") # the distances are clustered and plotted
+```
+
+## PCA 
+
+### Principal component analysis (PCA) is used to reduce the dimensionality of, or the number of variables in, the data. This is done by computing the principal components to subsequentally change the basis on the data. The dendrogram clustering showed efficient clustering of the sample groups, so I expect to see little variance between the triplicates for each sample.
+
+```{r}
+rv <- rowVars(assay(rld)) # rowVars(assay(DESeq.rlog)) is equivalent to rowVars(rlog.norm.counts); this function defines rv as variant estimates for each row in the matrix
+top_variable <- order(rv, decreasing = TRUE)[seq_len(500)] # this defines top_variable as a permutation with the row variations in descending order
+pca <- prcomp(t(assay(rld)[top_variable, ])) # this defines pca as the principal component analysis of the transposed rlog.norm.counts matrix, returning the object of class prcomp
+head(pca$x)
+```
+
+```{r}
+plotPCA(rld) 
+```
+
+## Differential gene expression
+
+```{r}
+# Extract the base means across samples
+res <- results(dds, independentFiltering = TRUE, alpha = 0.05)
+head(res)
+```
+
+```{r}
+summary(res)
+```
+
+### How many reads have a padj < 0.05?
+
+```{r}
+table(res$padj < 0.05)
+```
+
+### How many reads were sequenced for each sample? 
+
+```{r}
+colSums(counts(dds))
+```
+
+```{r}
+# Histogram of adjusted p-values
+hist(res$padj,
+     col="grey", border="white", xlab="Adj. p-value", ylab="Frequency",
+     main="frequencies of adj. p-values\n(all genes)",
+     cex = 0.4)
+```
+```{r}
+# Sorted table of the results, sorted by padj
+resSorted <- res[order(res$padj),]
+head(resSorted)
+```
+
+### Heat maps
+
+```
+# Heatmap of DEG sorted by padj
+# identify genes with the desired adjusted p-value cut-off
+DGEgenes <- rownames(subset(resSorted, padj < 0.05))
+
+# extract rlog-transformed values into a matrix
+rld <- DESeq.rlog(DGEgenes) %>% assay
+
+library(pheatmap)
+# heatmap of DEG sorted by p.adjust
+pheatmap(rld, scale="row",
+         show_rownames = FALSE, main = "DGE (row-based z-score)")
+```
+
+## I don't know why the above script isn't working now, but I swear it worked before! This was what it looked like, and it's actually an exact representation of Richard's analysis. I don't know why it got messed up. But in the interest of time, here it is.
+
+```{r}
+knitr::include_graphics("/Users/ifehakano/Documents/ANGSD/z-score_HM.png")
+```
+
+```{r}
+# Heatmap of normalized row means
+select <- order(rowMeans(counts(dds,normalized=FALSE)),
+                decreasing=TRUE)[1:20]
+rownames(dds) <- colnames(rld)
+df <- NULL
+pheatmap(assay(rld)[select,], cluster_rows=FALSE, show_rownames=TRUE, cluster_cols=FALSE, annotation_col=df)
+```
+### I really tried my best to convert the ENSEMBL ID's to gene names. See more about this in the discussion.
+
+```{r}
+# Heatmap for LFC
+library("genefilter")
+topVarianceGenes <- head(order(rowVars(assay(rld)), decreasing=T),20)
+matrix <- assay(rld)[ topVarianceGenes, ]
+matrix <- as.array(assay(rld)[ topVarianceGenes, ])
+annotation_data <- as.data.frame(colData(rld)[c("condition")])
+pheatmap(matrix, scale = 'row', annotation_col=annotation_data)
+```
+
+### MA-plot
+
+### The MA-plot provides a global overview of the differential genes, with the log2 fold change on the y-axis over the mean of normalized counts.Genes that pass the significance threshold (adjusted p.value <0.05) are colored in red
+
+```{r}
+plotMA(res, alpha = 0.05,main = "Test: p.adj.value < 0.05", ylim =c(-4,4))
+```
+
+# Discussion
+
+### I faced a broad range of issues when processing these data, but these complications cannot be attributed to the quality of the data. The issues faced throughout this data analysis process were largely due to lack of experience and the massive amount of memory needed to run the scripts.
+
+## Issues with alignment
+
+### These data were deeply sequenced, averaging 40M reads per sample, so the raw data files were large and needed a large amount of memory to align. When I finally established the correct parameters to move forward with the alignmnet, it took an entire day to align with STAR. Furthermore, memory issues were encountered when indexing the human genome and running QC on the aligned files. 
+
+### Before moving forward to count the reads and perform DESeq analysis, I truly tried my best to use QoRT or RSeQC on the aligned files. Due to a lack of experience and general technical issues, I was not able to troubleshoot the QoRT or RSeQC workflows. Given these circumstances, my QC is limited to MultiQC of FastQC, STAR, and featureCounts.  For QoRT, I used the following script and it took about 8 hours to run. It populated output files in each of the respective sample folders, so I thought it worked, but it didn't actually output a pdf. For RSeQC, I kept getting different errors when trying to run the read distribution workflow. For gene body coverage, I didn't get any errors, but the output files did not look right. 
+
+## Issues with downstream data analysis in R studio 
+
+### When working through the data in R Studio, I faced a wide range of technical issues which were, again, not due to the data quality or incompetence of the scientist, but due to an extreme lack of experience. I was unable to successfully troubleshoot the GSEA analysis, so I am presenting here GSEA analysis performed by our collaborator at MKSCC, Dr. Richard Koche. Furthermore, I had technical difficulties when converting the ENSEMBL ID's to gene names, limiting my analysis when trying to analyze the top-ranked genes. This issue is due to errors in loading the human ensemble dataset. I Googled these errors, and a lot of people had the same error within the last couple of days, so it looks like there may be a glitch. In the interest of time, I had to make do without it. Encouragingly, I have data analysis from Richard for GSEA so I will be presenting that during my presentation. 
+
+# Table of Generated Datasets 
+
+```{r}
+knitr::include_graphics("/Users/ifehakano/Documents/ANGSD/datasets.png")
+```
+
+# References
+
+### 1. Jenuwein T, Allis CD. Translating the histone code. Science. (2001)
+
+### 2. Weake VM, Workman JL. Histone Ubiquitination: Triggering Gene Activity. Mol Cell. (2008)
+
+### 3. Huang H, Sabari BR, Garcia BA, David Allis C, Zhao Y. SnapShot: Histone modifications. Cell. (2014)
+
+### 4. Unk I, Hajdú I, Blastyák A, Haracska L. Role of yeast Rad5 and its human orthologs, HLTF and SHPRH in DNA damage tolerance. DNA Repair (Amst). (2010)
+
+### 5. Lin J-R, Zeman MK, Chen J-Y, Yee M-C, Cimprich KA. SHPRH and HLTF Act in a Damage-specific Manner to Coordinate Different Forms of Post-replication Repair and Prevent Mutagenesis. Bone. (2012)
+
+### 6. Brühl J, Trautwein J, Schäfer A, Linne U, Bouazoune K. The DNA repair protein SHPRH is a nucleosome-stimulated ATPase and a nucleosome-E3 ubiquitin ligase. Epigenetics and Chromatin. (2019)
+
+### 7. Lee D, An J, Park YU, et al. SHPRH regulates rRNA transcription by recognizing the histone code in an mTOR-dependent manner. Proc Natl Acad Sci U S A. (2017)
